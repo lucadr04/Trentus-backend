@@ -1,0 +1,319 @@
+{
+    "Avviso": {
+        "type": "object",
+        "required": [
+            "titolo",
+            "corpo",
+            "tipo",
+            "servizio_id"
+        ],
+        "properties": {
+            "titolo": {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 64,
+                "description": "Titolo dell'avviso, minimo 5 caratteri, massimo 64 caratteri"
+            },
+            "corpo": {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 255,
+                "description": "Contenuto dell'avviso, minimo 5 caratteri, massimo 255 caratteri"
+            },
+            "tipo": {
+                "type": "string",
+                "enum": [
+                    "manutenzione",
+                    "problemi",
+                    "down"
+                ],
+                "description": "Tipo di avviso"
+            },
+            "inizio": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true,
+                "description": "Data di inizio (opzionale)"
+            },
+            "fine": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true,
+                "description": "Data di fine (opzionale, deve essere una data futura)"
+            },
+            "servizio_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Riferimento al servizio correlato"
+            }
+        }
+    },
+    "Feedback": {
+        "type": "object",
+        "required": [
+            "risposte",
+            "utente_id",
+            "sondaggio_id",
+            "servizio_id"
+        ],
+        "properties": {
+            "risposte": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "description": "Risposta"
+                },
+                "description": "Elenco delle risposte al sondaggio"
+            },
+            "utente_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Riferimento all'utente associato"
+            },
+            "sondaggio_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Riferimento al sondaggio associato"
+            },
+            "servizio_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Riferimento al servizio associato"
+            }
+        }
+    },
+    "Login": {
+        "type": "object",
+        "required": [
+            "email",
+            "passwordHash"
+        ],
+        "properties": {
+            "email": {
+                "type": "string",
+                "format": "email",
+                "uniqueItems": true,
+                "description": "Indirizzo email"
+            },
+            "passwordHash": {
+                "type": "string",
+                "description": "Hash della password"
+            }
+        }
+    },
+    "RichiestaGdS": {
+        "type": "object",
+        "required": [
+            "email",
+            "passwordHash",
+            "titolo",
+            "azienda",
+            "foto"
+        ],
+        "properties": {
+            "email": {
+                "type": "string",
+                "format": "email",
+                "uniqueItems": true,
+                "description": "Indirizzo email univoco per la richiesta"
+            },
+            "passwordHash": {
+                "type": "string",
+                "description": "Hash della password per la richiesta"
+            },
+            "titolo": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "Titolo della richiesta, massimo 64 caratteri"
+            },
+            "azienda": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "Nome dell'azienda associata alla richiesta"
+            },
+            "url": {
+                "type": "string",
+                "maxLength": 255,
+                "description": "URL associato alla richiesta (opzionale)"
+            },
+            "foto": {
+                "type": "string",
+                "description": "URL o riferimento alla foto associata"
+            },
+            "descrizione": {
+                "type": "string",
+                "maxLength": 255,
+                "description": "Descrizione della richiesta (opzionale)"
+            },
+            "confermata": {
+                "type": "boolean",
+                "default": false,
+                "description": "Stato della richiesta, confermata o no (default: false)"
+            }
+        }
+    },
+    "Segnalazione": {
+        "type": "object",
+        "required": [
+            "risposte",
+            "utente_id",
+            "servizio_id"
+        ],
+        "properties": {
+            "risposte": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "description": "Risposta"
+                },
+                "description": "Elenco delle risposte selezionate"
+            },
+            "Commento": {
+                "type": "string",
+                "maxLength": 255,
+                "description": "Commento opzionale, massimo 255 caratteri"
+            },
+            "utente_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Riferimento all'utente associato"
+            },
+            "servizio_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Riferimento al servizio correlato"
+            },
+            "Grafico": {
+                "type": "object",
+                "description": "Dati necessari al front-end per elaborare i grafici"
+            }
+        }
+    },
+    "Servizio": {
+        "type": "object",
+        "required": [
+            "titolo",
+            "azienda",
+            "foto"
+        ],
+        "properties": {
+            "titolo": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "Titolo del servizio, massimo 64 caratteri"
+            },
+            "azienda": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "Nome dell'azienda che offre il servizio, massimo 64 caratteri"
+            },
+            "url": {
+                "type": "string",
+                "maxLength": 255,
+                "description": "URL del servizio (opzionale)"
+            },
+            "foto": {
+                "type": "string",
+                "description": "URL o riferimento alla foto del servizio"
+            },
+            "descrizione": {
+                "type": "string",
+                "maxLength": 255,
+                "description": "Descrizione del servizio (opzionale), massimo 255 caratteri"
+            },
+            "Stato": {
+                "type": "string",
+                "maxLength": 3,
+                "description": "Stato del servizio (on/off)"
+            },
+            "Form": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "description": "Opzione"
+                },
+                "description": "Form per le opzioni del servizio (opzionale)"
+            }
+        }
+    },
+    "Sondaggio": {
+        "type": "object",
+        "required": [
+            "titolo",
+            "corpo",
+            "servizio_id"
+        ],
+        "properties": {
+            "titolo": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "Titolo del sondaggio, massimo 64 caratteri"
+            },
+            "corpo": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "description": "Opzione"
+                },
+                "description": "Contenuto del sondaggio"
+            },
+            "servizio_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Riferimento al servizio associato"
+            }
+        }
+    },
+    "Utente": {
+        "type": "object",
+        "required": [
+            "email",
+            "passwordHash"
+        ],
+        "properties": {
+            "email": {
+                "type": "string",
+                "format": "email",
+                "uniqueItems": true,
+                "description": "Indirizzo email univoco dell'utente"
+            },
+            "passwordHash": {
+                "type": "string",
+                "description": "Hash della password dell'utente"
+            },
+            "Preferiti": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Riferimento al servizio preferito"
+                },
+                "description": "Elenco dei servizi preferiti dell'utente"
+            }
+        }
+    },
+    "GdS": {
+        "type": "object",
+        "required": [
+            "email",
+            "passwordHash",
+            "servizio"
+        ],
+        "properties": {
+            "email": {
+                "type": "string",
+                "format": "email",
+                "uniqueItems": true,
+                "description": "Indirizzo email"
+            },
+            "passwordHash": {
+                "type": "string",
+                "description": "Hash della password"
+            },
+            "servizio": {
+                "type": "string",
+                "description": "id del servizio gestito"
+            }
+        }
+    }
+}

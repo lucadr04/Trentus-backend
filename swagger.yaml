@@ -1,0 +1,967 @@
+openapi: 3.0.0
+info:
+  version: 2.0.0
+  title: Trentus API
+  description: Documentazione delle API di Trentus
+servers:
+  - url: 'http://localhost:8080'
+    description: Server Locale
+paths:
+  '/servizi/{servizio_id}/avvisi/':
+    get:
+      description: Restituisce tutti gli avvisi
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Avviso'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+    post:
+      description: Crea un avviso e invia una mail a tutti gli utenti interessati
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - gds
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Avviso'
+  '/servizi/{servizio_id}/avvisi/{avviso_id}':
+    get:
+      description: Restituisce un avviso in base all
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: avviso_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Avviso'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/servizi/{servizio_id}/sondaggi/':
+    get:
+      description: Restituisce i sondaggi compilabili del servizio
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sondaggio'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - gds
+            - utente
+    post:
+      description: Crea un sondaggio
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - gds
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sondaggio'
+  '/servizi/{servizio_id}/sondaggi/{sondaggio_id}':
+    get:
+      description: Restituisce un sondaggio
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: sondaggio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sondaggio'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - gds
+            - utente
+    post:
+      description: Rilascia un feedback
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: sondaggio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - utente
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Feedback'
+  '/servizi/{servizio_id}/sondaggi/{sondaggio_id}/risultati':
+    get:
+      description: Restituisce i risultati di un sondaggio
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: sondaggio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Feedback'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - gds
+  '/servizi/{servizio_id}/segnalazioni/form':
+    get:
+      description: Restituisce la form di segnalazione compilabile per un servizio
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Servizio/properties/Form'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    post:
+      description: Genera la form di segnalazione compilabile per un servizio
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - gds
+            - SuperAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Servizio/properties/Form'
+  '/servizi/{servizio_id}/segnalazioni/compila':
+    post:
+      description: Salva i dati del form di segnalazione del servizio compilato dall
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - utente
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Segnalazione'
+  '/servizi/{servizio_id}/segnalazioni/commenti':
+    get:
+      description: Restituisce i commenti delle segnalazioni di un servizio
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Segnalazione/properties/Commento'
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/servizi/{servizio_id}/segnalazioni/istogramma':
+    get:
+      description: Restituisce dati per la creazione del grafico di frequenza segnalazioni
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segnalazione/properties/Grafico'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/servizi/{servizio_id}/segnalazioni/areogramma':
+    get:
+      description: Restituisce dati per la creazione del grafico di problemi riscontrati
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segnalazione/properties/Grafico'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /gds/login:
+    post:
+      description: Login GdS
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+  /gds/registrazione:
+    post:
+      description: Invia una richiesta di registrazione per un GdS
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RichiestaGdS'
+  /gds/servizio:
+    get:
+      description: Restituisce il servizio associato al GdS
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Servizio'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - BearerAuth:
+            - gds
+  /utente/login:
+    post:
+      description: Login Utente
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+  /utente/:
+    get:
+      description: Restituisce i dati di un utente
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Utente'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - BearerAuth:
+            - utente
+  /utente/registrazione:
+    post:
+      description: Registra un nuovo utente
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Utente'
+  /utente/preferiti:
+    get:
+      description: Restituisce i preferiti di un utente
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Utente/properties/Preferiti'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - utente
+  /servizi/:
+    get:
+      description: Restituisce tutti i servizi
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Servizio'
+        '500':
+          description: Internal Server Error
+  /servizi/classifica:
+    get:
+      description: Classifica dei servizi più problematici
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  servizio_id:
+                    type: string
+                    description: Servizio_id
+                  segnalazioni:
+                    type: int
+                    description: nnumero ci segnalazioni del servizio
+        '500':
+          description: Internal Server Error
+  '/servizi/{servizio_id}':
+    get:
+      description: Restituisce servizio in base al suo id
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Servizio'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/servizi/{servizio_id}/preferito':
+    post:
+      description: Servizio salvato nei preferiti dell
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - utente
+  '/servizi/{servizio_id}/modifica':
+    post:
+      description: Servizio ON
+      parameters:
+        - name: servizio_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - gds
+            - SuperAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  example: any
+  /controlpanel/login:
+    post:
+      description: Login Superadmin
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - SuperAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+  /controlpanel/confermagds/lista:
+    get:
+      description: Ottieni richieste di registrazione per un GdS
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - SuperAdmin
+  '/controlpanel/confermagds/{richiesta_id}':
+    post:
+      description: Conferma la richiesta di registrazione per un GdS
+      parameters:
+        - name: richiesta_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      security:
+        - BearerAuth:
+            - SuperAdmin
+components:
+  schemas:
+    Avviso:
+      type: object
+      required:
+        - titolo
+        - corpo
+        - tipo
+        - servizio_id
+      properties:
+        titolo:
+          type: string
+          minLength: 5
+          maxLength: 64
+          description: 'Titolo dell''avviso, minimo 5 caratteri, massimo 64 caratteri'
+        corpo:
+          type: string
+          minLength: 5
+          maxLength: 255
+          description: 'Contenuto dell''avviso, minimo 5 caratteri, massimo 255 caratteri'
+        tipo:
+          type: string
+          enum:
+            - manutenzione
+            - problemi
+            - down
+          description: Tipo di avviso
+        inizio:
+          type: string
+          format: date-time
+          nullable: true
+          description: Data di inizio (opzionale)
+        fine:
+          type: string
+          format: date-time
+          nullable: true
+          description: 'Data di fine (opzionale, deve essere una data futura)'
+        servizio_id:
+          type: string
+          format: uuid
+          description: Riferimento al servizio correlato
+    Feedback:
+      type: object
+      required:
+        - risposte
+        - utente_id
+        - sondaggio_id
+        - servizio_id
+      properties:
+        risposte:
+          type: array
+          items:
+            type: object
+            description: Risposta
+          description: Elenco delle risposte al sondaggio
+        utente_id:
+          type: string
+          format: uuid
+          description: Riferimento all'utente associato
+        sondaggio_id:
+          type: string
+          format: uuid
+          description: Riferimento al sondaggio associato
+        servizio_id:
+          type: string
+          format: uuid
+          description: Riferimento al servizio associato
+    Login:
+      type: object
+      required:
+        - email
+        - passwordHash
+      properties:
+        email:
+          type: string
+          format: email
+          uniqueItems: true
+          description: Indirizzo email
+        passwordHash:
+          type: string
+          description: Hash della password
+    RichiestaGdS:
+      type: object
+      required:
+        - email
+        - passwordHash
+        - titolo
+        - azienda
+        - foto
+      properties:
+        email:
+          type: string
+          format: email
+          uniqueItems: true
+          description: Indirizzo email univoco per la richiesta
+        passwordHash:
+          type: string
+          description: Hash della password per la richiesta
+        titolo:
+          type: string
+          maxLength: 64
+          description: 'Titolo della richiesta, massimo 64 caratteri'
+        azienda:
+          type: string
+          maxLength: 64
+          description: Nome dell'azienda associata alla richiesta
+        url:
+          type: string
+          maxLength: 255
+          description: URL associato alla richiesta (opzionale)
+        foto:
+          type: string
+          description: URL o riferimento alla foto associata
+        descrizione:
+          type: string
+          maxLength: 255
+          description: Descrizione della richiesta (opzionale)
+        confermata:
+          type: boolean
+          default: false
+          description: 'Stato della richiesta, confermata o no (default: false)'
+    Segnalazione:
+      type: object
+      required:
+        - risposte
+        - utente_id
+        - servizio_id
+      properties:
+        risposte:
+          type: array
+          items:
+            type: object
+            description: Risposta
+          description: Elenco delle risposte selezionate
+        Commento:
+          type: string
+          maxLength: 255
+          description: 'Commento opzionale, massimo 255 caratteri'
+        utente_id:
+          type: string
+          format: uuid
+          description: Riferimento all'utente associato
+        servizio_id:
+          type: string
+          format: uuid
+          description: Riferimento al servizio correlato
+        Grafico:
+          type: object
+          description: Dati necessari al front-end per elaborare i grafici
+    Servizio:
+      type: object
+      required:
+        - titolo
+        - azienda
+        - foto
+      properties:
+        titolo:
+          type: string
+          maxLength: 64
+          description: 'Titolo del servizio, massimo 64 caratteri'
+        azienda:
+          type: string
+          maxLength: 64
+          description: 'Nome dell''azienda che offre il servizio, massimo 64 caratteri'
+        url:
+          type: string
+          maxLength: 255
+          description: URL del servizio (opzionale)
+        foto:
+          type: string
+          description: URL o riferimento alla foto del servizio
+        descrizione:
+          type: string
+          maxLength: 255
+          description: 'Descrizione del servizio (opzionale), massimo 255 caratteri'
+        Stato:
+          type: string
+          maxLength: 3
+          description: Stato del servizio (on/off)
+        Form:
+          type: array
+          items:
+            type: object
+            description: Opzione
+          description: Form per le opzioni del servizio (opzionale)
+    Sondaggio:
+      type: object
+      required:
+        - titolo
+        - corpo
+        - servizio_id
+      properties:
+        titolo:
+          type: string
+          maxLength: 64
+          description: 'Titolo del sondaggio, massimo 64 caratteri'
+        corpo:
+          type: array
+          items:
+            type: object
+            description: Opzione
+          description: Contenuto del sondaggio
+        servizio_id:
+          type: string
+          format: uuid
+          description: Riferimento al servizio associato
+    Utente:
+      type: object
+      required:
+        - email
+        - passwordHash
+      properties:
+        email:
+          type: string
+          format: email
+          uniqueItems: true
+          description: Indirizzo email univoco dell'utente
+        passwordHash:
+          type: string
+          description: Hash della password dell'utente
+        Preferiti:
+          type: array
+          items:
+            type: string
+            format: uuid
+            description: Riferimento al servizio preferito
+          description: Elenco dei servizi preferiti dell'utente
+  securitySchemes:
+    BearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: Bearer token per accedere alle API
+security:
+  - BearerAuth: []
